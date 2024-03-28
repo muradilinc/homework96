@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -55,5 +58,15 @@ export class CocktailsController {
   @Get()
   getAll() {
     return this.cocktailModel.find();
+  }
+
+  @Get('/:id')
+  getOne(@Param('id') id: string) {
+    return this.cocktailModel.findById(id);
+  }
+
+  @Delete(':id')
+  deleteCocktail(@Param('id') id: string) {
+    return this.cocktailModel.findByIdAndDelete(id);
   }
 }

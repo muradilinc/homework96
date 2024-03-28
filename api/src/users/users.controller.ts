@@ -48,7 +48,6 @@ export class UsersController {
     try {
       const user = new this.userModel({
         email: registerDto.email,
-        username: registerDto.username,
         displayName: registerDto.displayName,
         password: registerDto.password,
         avatar: file ? '/uploads/users/' + file.filename : null,
