@@ -9,6 +9,8 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './auth/local.strategy';
 import { CocktailsController } from './cocktails/cocktails.controller';
 import { Cocktail, CocktailSchema } from './schemas/cocktails.schema';
+import { TokenAuthGuard } from './auth/token-auth.guard';
+import { PermitAuthGuard } from './auth/permit-auth.guard';
 
 @Module({
   imports: [
@@ -20,6 +22,12 @@ import { Cocktail, CocktailSchema } from './schemas/cocktails.schema';
     PassportModule,
   ],
   controllers: [AppController, UsersController, CocktailsController],
-  providers: [AppService, AuthService, LocalStrategy],
+  providers: [
+    AppService,
+    AuthService,
+    LocalStrategy,
+    TokenAuthGuard,
+    PermitAuthGuard,
+  ],
 })
 export class AppModule {}

@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Query,
+  SetMetadata,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -18,6 +20,8 @@ import express from 'express';
 import { randomUUID } from 'crypto';
 import { extname } from 'path';
 import { CreateCocktailDto } from './create-cocktail.dto';
+import { TokenAuthGuard } from '../auth/token-auth.guard';
+import { PermitAuthGuard } from '../auth/permit-auth.guard';
 
 @Controller('cocktails')
 export class CocktailsController {
@@ -25,6 +29,7 @@ export class CocktailsController {
     @InjectModel(Cocktail.name) private cocktailModel: Model<CocktailDocument>,
   ) {}
 
+  @UseGuards(TokenAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
@@ -65,6 +70,20 @@ export class CocktailsController {
     return this.cocktailModel.findById(id);
   }
 
+  @UseGuards(TokenAuthGuard, PermitAuthGuard)
+  @SetMetadata('roles', 'admin')
+  @Patch(':id')
+  changeStatus(@Param('id') id: string) {
+    return this.cocktailModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      [{ $set: { isPublished: { $eq: [false, '$isPublished'] } } }],
+    );
+  }
+
+  @UseGuards(TokenAuthGuard, PermitAuthGuard)
+  @SetMetadata('roles', 'admin')
   @Delete(':id')
   deleteCocktail(@Param('id') id: string) {
     return this.cocktailModel.findByIdAndDelete(id);
