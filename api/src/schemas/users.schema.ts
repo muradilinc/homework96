@@ -30,6 +30,9 @@ export class User {
 
   @Prop({ required: true, enum: ['user', 'admin'], default: 'user' })
   role: string;
+
+  @Prop()
+  googleID: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

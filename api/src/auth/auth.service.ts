@@ -12,13 +12,6 @@ export class AuthService {
     pass: string,
   ): Promise<UserDocument | null> {
     const user = await this.userModel.findOne({ email });
-
-    // if (user && (await user.checkPassword(pass))) {
-    //   user.generateToken();
-    //   await user.save();
-    //
-    //   return user;
-    // }
     if (user) {
       const passwordIsCorrect = await user.checkPassword(pass);
       if (passwordIsCorrect) {

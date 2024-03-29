@@ -3,6 +3,7 @@ import { LoginMutation } from '../../types';
 import { useAppDispatch } from '../../app/hooks';
 import { login } from '../../store/users/usersThunk';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
   const [state, setState] = useState<LoginMutation>({
@@ -52,6 +53,10 @@ const LoginPage = () => {
             name="password"
             value={state.password}
             onChange={changeFields}
+          />
+          <GoogleLogin
+            onSuccess={(credentialResponse) => console.log(credentialResponse)}
+            onError={() => console.log('login failed')}
           />
           <button
             type="submit"

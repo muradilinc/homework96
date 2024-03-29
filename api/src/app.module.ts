@@ -11,9 +11,13 @@ import { CocktailsController } from './cocktails/cocktails.controller';
 import { Cocktail, CocktailSchema } from './schemas/cocktails.schema';
 import { TokenAuthGuard } from './auth/token-auth.guard';
 import { PermitAuthGuard } from './auth/permit-auth.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
     MongooseModule.forRoot('mongodb://localhost/cocktail'),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
