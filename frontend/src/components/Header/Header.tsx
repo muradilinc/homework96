@@ -1,10 +1,11 @@
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectUser } from '../../store/users/usersSlice';
 import { Link } from 'react-router-dom';
+import { logout } from '../../store/users/usersThunk';
 
 const Header = () => {
   const user = useAppSelector(selectUser);
-  // const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   return (
     <div className="bg-green-400">
@@ -19,7 +20,10 @@ const Header = () => {
         <div className="text-white flex gap-x-3 items-center">
           {user ? (
             <>
-              <button className="bg-blue-300 text-[16px] capitalize py-[5px] rounded-[5px] px-[10px]">
+              <button
+                onClick={() => dispatch(logout())}
+                className="bg-blue-300 text-[16px] capitalize py-[5px] rounded-[5px] px-[10px]"
+              >
                 logout
               </button>
             </>

@@ -1,5 +1,8 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { RegisterMutation } from '../../types';
+import { useAppDispatch } from '../../app/hooks';
+import { register } from '../../store/users/usersThunk';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
   const [state, setState] = useState<RegisterMutation>({
@@ -11,6 +14,8 @@ const RegisterPage = () => {
   const imageSelect = useRef<HTMLInputElement>(null);
   const [filename, setFilename] = useState('');
   const [imageData, setImageData] = useState('');
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const changeFields = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -51,13 +56,33 @@ const RegisterPage = () => {
     }
   };
 
+  const registerHandle = async (event: FormEvent) => {
+    event.preventDefault();
+    await dispatch(register(state)).unwrap();
+    setState({
+      email: '',
+      username: '',
+      avatar: null,
+      password: '',
+    });
+    setFilename('');
+    setImageData('');
+    if (imageSelect.current) {
+      imageSelect.current.value = '';
+    }
+    navigate('/');
+  };
+
   return (
     <div className="flex flex-col justify-center items-center h-[80vh]">
       <div className="bg-[#E7E7E7] w-[40%] p-5 rounded-[5px]">
         <h2 className="text-center font-semibold text-[32px] text-green-400">
           Register form
         </h2>
-        <form className="flex flex-col gap-y-3 my-[15px]">
+        <form
+          onSubmit={registerHandle}
+          className="flex flex-col gap-y-3 my-[15px]"
+        >
           <input
             className="bg-inherit text-[20px] outline-0 px-[10px] py-[5px] border-b border-black placeholder:capitalize"
             type="email"
