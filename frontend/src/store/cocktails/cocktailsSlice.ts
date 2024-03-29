@@ -11,12 +11,14 @@ interface CocktailsState {
   cocktail: CocktailData | null;
   cocktails: CocktailData[];
   cocktailsLoading: boolean;
+  cocktailLoading: boolean;
 }
 
 const initialState: CocktailsState = {
   cocktail: null,
   cocktails: [],
   cocktailsLoading: false,
+  cocktailLoading: false,
 };
 
 const cocktailsSlice = createSlice({
@@ -51,17 +53,17 @@ const cocktailsSlice = createSlice({
       state.cocktailsLoading = false;
     });
     builder.addCase(getSingleCocktail.pending, (state) => {
-      state.cocktailsLoading = true;
+      state.cocktailLoading = true;
     });
     builder.addCase(
       getSingleCocktail.fulfilled,
       (state, { payload: cocktail }: PayloadAction<CocktailData>) => {
-        state.cocktailsLoading = false;
+        state.cocktailLoading = false;
         state.cocktail = cocktail;
       },
     );
     builder.addCase(getSingleCocktail.rejected, (state) => {
-      state.cocktailsLoading = false;
+      state.cocktailLoading = false;
     });
   },
 });
@@ -71,3 +73,5 @@ export const selectCocktails = (state: RootState) => state.cocktails.cocktails;
 export const selectCocktail = (state: RootState) => state.cocktails.cocktail;
 export const selectCocktailsLoading = (state: RootState) =>
   state.cocktails.cocktailsLoading;
+export const selectCocktailLoading = (state: RootState) =>
+  state.cocktails.cocktailLoading;

@@ -21,9 +21,21 @@ const Header = () => {
           {user ? (
             <>
               <div className="flex gap-x-3 items-center">
+                {user.role === 'admin' ? (
+                  <Link className="capitalize" to="admin">
+                    admin
+                  </Link>
+                ) : null}
+                <Link className="capitalize" to="my-cocktails">
+                  my cocktails
+                </Link>
                 <img
-                  className="rounded-[50%] w-[40px] p-[3px] bg-black"
-                  src={user.avatar}
+                  className="rounded-[50%] w-[60px] h-[40px] p-[3px] bg-black"
+                  src={
+                    user.avatar.includes('users')
+                      ? 'http://localhost:3000' + user.avatar
+                      : user.avatar
+                  }
                   alt="avata"
                 />
                 <h4 className="font-bold">{user.displayName}</h4>

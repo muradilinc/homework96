@@ -113,7 +113,7 @@ const RegisterPage = () => {
             <h4 className="capitalize text-[22px]">avatar</h4>
             {filename.length === 0 ? (
               <button
-                className="capitalize border-blue-700 border text-blue-600 font-bold p-[5px] px-[10px] rounded-[35px]"
+                className="capitalize border-green-700 border text-green-600 font-bold p-[5px] px-[10px] rounded-[35px]"
                 onClick={selectImage}
                 type="button"
               >

@@ -8,13 +8,14 @@ import {
   Post,
   Query,
   SetMetadata,
+  UnprocessableEntityException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cocktail, CocktailDocument } from '../schemas/cocktails.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import express from 'express';
@@ -51,14 +52,22 @@ export class CocktailsController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createCocktailDto: CreateCocktailDto,
   ) {
-    const cocktail = new this.cocktailModel({
-      user: createCocktailDto.user,
-      title: createCocktailDto.title,
-      image: file ? '/uploads/cocktails/' + file.filename : null,
-      recipe: createCocktailDto.recipe,
-      ingredients: JSON.parse(createCocktailDto.ingredients.toString()),
-    });
-    return await cocktail.save();
+    try {
+      const cocktail = new this.cocktailModel({
+        user: createCocktailDto.user,
+        title: createCocktailDto.title,
+        image: file ? '/uploads/cocktails/' + file.filename : null,
+        recipe: createCocktailDto.recipe,
+        ingredients: JSON.parse(createCocktailDto.ingredients.toString()),
+      });
+      return await cocktail.save();
+    } catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        throw new UnprocessableEntityException(error);
+      }
+
+      throw error;
+    }
   }
 
   @Get()

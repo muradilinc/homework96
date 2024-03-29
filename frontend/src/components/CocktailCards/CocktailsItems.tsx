@@ -6,7 +6,7 @@ const CocktailsItems = () => {
   const cocktails = useAppSelector(selectCocktails);
 
   return (
-    <div className="grid grid-cols-5 gap-x-3">
+    <div className="grid grid-cols-5 gap-x-3 gap-y-3">
       {cocktails.map((cocktail) => (
         <CocktailsCard key={cocktail._id} cocktail={cocktail} />
       ))}

@@ -4,14 +4,21 @@ import { selectUser } from '../../store/users/usersSlice';
 import CocktailsItems from '../../components/CocktailCards/CocktailsItems';
 import { useEffect } from 'react';
 import { getCocktails } from '../../store/cocktails/cocktailsThunk';
+import { selectCocktailsLoading } from '../../store/cocktails/cocktailsSlice';
+import Spinner from '../../components/Spinner/Spinner';
 
 const HomePage = () => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
+  const loading = useAppSelector(selectCocktailsLoading);
 
   useEffect(() => {
     dispatch(getCocktails());
   }, [dispatch]);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <>

@@ -1,9 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { LoginMutation } from '../../types';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { googleLogin, login } from '../../store/users/usersThunk';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
+import { selectLoginError } from '../../store/users/usersSlice';
 
 const LoginPage = () => {
   const [state, setState] = useState<LoginMutation>({
@@ -12,6 +13,7 @@ const LoginPage = () => {
   });
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const error = useAppSelector(selectLoginError);
 
   const changeFields = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -67,6 +69,7 @@ const LoginPage = () => {
             }}
             onError={() => console.log('login failed')}
           />
+          {error && <p className="text-red-500 text-sm">{error.message}</p>}
           <button
             type="submit"
             className="capitalize bg-green-400 py-[10px] rounded-[5px] text-white my-[20px]"

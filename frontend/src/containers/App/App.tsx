@@ -11,12 +11,25 @@ import { selectUser } from '../../store/users/usersSlice';
 import MyCocktailsPage from '../MyCocktails/MyCocktailsPage';
 import AdminPage from '../Admin/AdminPage';
 import CocktailPage from '../Cocktail/CocktailPage';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   const user = useAppSelector(selectUser);
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />

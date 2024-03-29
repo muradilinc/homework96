@@ -28,7 +28,7 @@ const CocktailsCard: React.FC<Props> = ({ cocktail }) => {
   return (
     <div
       key={cocktail._id}
-      className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 relative"
+      className="w-full flex flex-col max-w-[350px] bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 relative"
     >
       {cocktail.isPublished ? null : (
         <span
@@ -48,7 +48,7 @@ const CocktailsCard: React.FC<Props> = ({ cocktail }) => {
           alt="CocktailImage"
         />
       </Link>
-      <div className="px-5 pb-5">
+      <div className="px-5 pb-5 grow">
         <Link to={`/cocktails/${cocktail._id}`}>
           <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
             {cocktail.title}

@@ -3,6 +3,8 @@ import { X } from '@phosphor-icons/react';
 import { CocktailCommonData, CocktailMutation, Ingredient } from '../../types';
 import { useAppDispatch } from '../../app/hooks';
 import { createCocktail } from '../../store/cocktails/cocktailsThunk';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const NewCocktailPage = () => {
   const [ingredient, setIngredient] = useState<Ingredient>({
@@ -20,6 +22,7 @@ const NewCocktailPage = () => {
   const [filename, setFilename] = useState('');
   const [imageData, setImageData] = useState('');
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const changeIngredient = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -41,10 +44,19 @@ const NewCocktailPage = () => {
 
   const addIngredientHandle = () => {
     const id = new Date().toISOString();
-    setIngredients((prevState) => [
-      ...prevState,
-      { id, name: ingredient.name, count: ingredient.count },
-    ]);
+    if (!ingredient.name.trim() || !ingredient.count.trim()) {
+      toast.error('Enter fields');
+    } else {
+      setIngredients((prevState) => [
+        ...prevState,
+        { id, name: ingredient.name, count: ingredient.count },
+      ]);
+      setIngredient({
+        id: '',
+        name: '',
+        count: '',
+      });
+    }
   };
 
   const deleteIngredientHandle = (id: string) => {
@@ -92,13 +104,23 @@ const NewCocktailPage = () => {
       cocktail,
       ingredients,
     };
+    if (ingredients.length === 0) {
+      toast.error('Please enter ingredient!');
+      return false;
+    }
     await dispatch(createCocktail(cocktailObject)).unwrap();
+    setCocktail({
+      title: '',
+      image: null,
+      recipe: '',
+    });
+    setIngredients([]);
+    toast.success('Cocktail already! On checking admin!');
+    navigate('/');
   };
 
-  console.log(cocktail);
-
   return (
-    <div className="bg-[#E7E7E7]">
+    <div className="bg-[#E7E7E7] p-5 rounded-[5px]">
       <h2 className="font-bold text-[26px]">Add new cocktail!</h2>
       <form
         onSubmit={createCocktailHandle}
@@ -156,7 +178,11 @@ const NewCocktailPage = () => {
                 />
               </div>
             </div>
-            <button type="button" onClick={addIngredientHandle}>
+            <button
+              className="capitalize bg-green-400 px-[10px] text-white py-3 rounded-[5px] font-bold"
+              type="button"
+              onClick={addIngredientHandle}
+            >
               add ingredient
             </button>
           </div>
@@ -185,7 +211,7 @@ const NewCocktailPage = () => {
           <div className="flex flex-col gap-y-3">
             {filename.length === 0 ? (
               <button
-                className="capitalize border-blue-700 border text-blue-600 font-bold p-[5px] px-[10px] rounded-[35px]"
+                className="capitalize border-green-700 border text-green-600 font-bold p-[5px] px-[10px] rounded-[35px]"
                 onClick={selectImage}
                 type="button"
               >
@@ -209,7 +235,10 @@ const NewCocktailPage = () => {
             )}
           </div>
         </div>
-        <button type="submit" className="capitalize">
+        <button
+          type="submit"
+          className="capitalize bg-green-400 text-white py-3 rounded-[5px] mt-[20px] font-bold"
+        >
           create cocktail
         </button>
       </form>

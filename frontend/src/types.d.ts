@@ -52,5 +52,21 @@ export interface CocktailData {
   image: string | null;
   isPublished: boolean;
   recipe: string;
+  ingredients: Ingredient[];
   user: User;
+}
+
+export interface GlobalError {
+  message: string;
+}
+export interface ValidationError {
+  error: {
+    [key: string]: {
+      name: string;
+      message: string;
+    };
+  };
+  message: string;
+  name: string;
+  _message: string;
 }

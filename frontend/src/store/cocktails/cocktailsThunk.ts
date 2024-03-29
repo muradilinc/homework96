@@ -8,18 +8,22 @@ export const createCocktail = createAsyncThunk<
   CocktailCommonData,
   { state: RootState }
 >('cocktail/createCocktail', async (cocktail, { getState }) => {
-  const user = getState().users.user;
-  const formData = new FormData();
-  if (user) {
-    formData.append('user', user._id);
+  try {
+    const user = getState().users.user;
+    const formData = new FormData();
+    if (user) {
+      formData.append('user', user._id);
+    }
+    formData.append('title', cocktail.cocktail.title);
+    if (cocktail.cocktail.image) {
+      formData.append('image', cocktail.cocktail.image);
+    }
+    formData.append('recipe', cocktail.cocktail.recipe);
+    formData.append('ingredients', JSON.stringify(cocktail.ingredients));
+    await axiosApi.post('/cocktails', formData);
+  } catch (error) {
+    console.log(error);
   }
-  formData.append('title', cocktail.cocktail.title);
-  if (cocktail.cocktail.image) {
-    formData.append('image', cocktail.cocktail.image);
-  }
-  formData.append('recipe', cocktail.cocktail.recipe);
-  formData.append('ingredients', JSON.stringify(cocktail.ingredients));
-  await axiosApi.post('/cocktails', formData);
 });
 
 export const getCocktails = createAsyncThunk<
@@ -64,5 +68,12 @@ export const updateStatusCocktail = createAsyncThunk<void, string>(
   'cocktail/updateStatusCocktail',
   async (id) => {
     return await axiosApi.patch(`/cocktails/${id}`);
+  },
+);
+
+export const deleteCocktail = createAsyncThunk<void, string>(
+  'cocktail/deleteCocktail',
+  async (id) => {
+    return await axiosApi.delete(`/cocktails/${id}`);
   },
 );
