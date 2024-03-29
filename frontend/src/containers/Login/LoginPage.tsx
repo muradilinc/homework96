@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { LoginMutation } from '../../types';
 import { useAppDispatch } from '../../app/hooks';
-import { login } from '../../store/users/usersThunk';
+import { googleLogin, login } from '../../store/users/usersThunk';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -24,6 +24,11 @@ const LoginPage = () => {
   const loginHandle = async (event: FormEvent) => {
     event.preventDefault();
     await dispatch(login(state)).unwrap();
+    navigate('/');
+  };
+
+  const googleLoginHandle = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
     navigate('/');
   };
 
@@ -55,7 +60,11 @@ const LoginPage = () => {
             onChange={changeFields}
           />
           <GoogleLogin
-            onSuccess={(credentialResponse) => console.log(credentialResponse)}
+            onSuccess={(credentialResponse) => {
+              if (credentialResponse.credential) {
+                void googleLoginHandle(credentialResponse.credential);
+              }
+            }}
             onError={() => console.log('login failed')}
           />
           <button

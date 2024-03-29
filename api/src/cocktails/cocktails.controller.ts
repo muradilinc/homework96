@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   SetMetadata,
   UploadedFile,
   UseGuards,
@@ -61,13 +62,23 @@ export class CocktailsController {
   }
 
   @Get()
-  getAll() {
-    return this.cocktailModel.find();
+  getAll(@Query('userId') userId: string, @Query('admin') admin: boolean) {
+    if (userId) {
+      return this.cocktailModel
+        .find({ user: userId })
+        .populate('user', 'displayName');
+    } else if (admin) {
+      return this.cocktailModel.find().populate('user', 'displayName');
+    } else {
+      return this.cocktailModel
+        .find({ isPublished: true })
+        .populate('user', 'displayName');
+    }
   }
 
   @Get('/:id')
   getOne(@Param('id') id: string) {
-    return this.cocktailModel.findById(id);
+    return this.cocktailModel.findById(id).populate('user', 'displayName');
   }
 
   @UseGuards(TokenAuthGuard, PermitAuthGuard)

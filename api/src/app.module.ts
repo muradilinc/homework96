@@ -12,12 +12,11 @@ import { Cocktail, CocktailSchema } from './schemas/cocktails.schema';
 import { TokenAuthGuard } from './auth/token-auth.guard';
 import { PermitAuthGuard } from './auth/permit-auth.guard';
 import { ConfigModule } from '@nestjs/config';
+import { GoogleController } from './google/google.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-    }),
+    ConfigModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost/cocktail'),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
@@ -25,7 +24,12 @@ import { ConfigModule } from '@nestjs/config';
     ]),
     PassportModule,
   ],
-  controllers: [AppController, UsersController, CocktailsController],
+  controllers: [
+    AppController,
+    UsersController,
+    CocktailsController,
+    GoogleController,
+  ],
   providers: [
     AppService,
     AuthService,

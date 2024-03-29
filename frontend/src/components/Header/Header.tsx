@@ -20,6 +20,14 @@ const Header = () => {
         <div className="text-white flex gap-x-3 items-center">
           {user ? (
             <>
+              <div className="flex gap-x-3 items-center">
+                <img
+                  className="rounded-[50%] w-[40px] p-[3px] bg-black"
+                  src={user.avatar}
+                  alt="avata"
+                />
+                <h4 className="font-bold">{user.displayName}</h4>
+              </div>
               <button
                 onClick={() => dispatch(logout())}
                 className="bg-blue-300 text-[16px] capitalize py-[5px] rounded-[5px] px-[10px]"

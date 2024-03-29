@@ -55,7 +55,12 @@ export class UsersController {
         avatar: file ? '/uploads/users/' + file.filename : null,
       });
       user.generateToken();
-      return await user.save();
+      await user.save();
+
+      return {
+        message: 'Email and password are correct!',
+        user,
+      };
     } catch (error) {
       if (error instanceof mongoose.Error.ValidationError) {
         throw new UnprocessableEntityException(error);
@@ -68,7 +73,10 @@ export class UsersController {
   @UseGuards(AuthGuard('local'))
   @Post('sessions')
   async login(@Req() req: Request) {
-    return req.user;
+    return {
+      message: 'Email and password are correct!',
+      user: req.user,
+    };
   }
 
   @UseGuards(TokenAuthGuard)

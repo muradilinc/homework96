@@ -1,11 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isAxiosError } from 'axios';
 import axiosApi from '../../axiosApi';
-import { LoginMutation, RegisterMutation, User } from '../../types';
+import {
+  LoginMutation,
+  LoginResponse,
+  RegisterMutation,
+  RegisterResponse,
+} from '../../types';
 import { RootState } from '../../app/store';
 import { logoutState } from './usersSlice';
 
-export const register = createAsyncThunk<User, RegisterMutation>(
+export const register = createAsyncThunk<RegisterResponse, RegisterMutation>(
   'users/register',
   async (user) => {
     try {
@@ -33,11 +38,31 @@ export const register = createAsyncThunk<User, RegisterMutation>(
   },
 );
 
-export const login = createAsyncThunk<User, LoginMutation>(
+export const login = createAsyncThunk<LoginResponse, LoginMutation>(
   'users/login',
   async (user) => {
     try {
       const response = await axiosApi.post('/users/sessions', user);
+      return response.data;
+    } catch (error) {
+      if (
+        isAxiosError(error) &&
+        error.response &&
+        error.response.status === 422
+      ) {
+        console.log(error);
+      }
+
+      throw error;
+    }
+  },
+);
+
+export const googleLogin = createAsyncThunk<RegisterResponse, string>(
+  'users/googleLogin',
+  async (credential) => {
+    try {
+      const response = await axiosApi.post('/google', { credential });
       return response.data;
     } catch (error) {
       if (

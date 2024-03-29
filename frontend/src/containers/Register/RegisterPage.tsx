@@ -107,6 +107,7 @@ const RegisterPage = () => {
             name="avatar"
             ref={imageSelect}
             onChange={changeImageFiled}
+            required
           />
           <div className="flex flex-col gap-y-3">
             <h4 className="capitalize text-[22px]">avatar</h4>
@@ -142,6 +143,7 @@ const RegisterPage = () => {
             name="password"
             value={state.password}
             onChange={changeFields}
+            required
           />
           <button
             type="submit"

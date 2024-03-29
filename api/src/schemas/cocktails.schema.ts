@@ -16,6 +16,9 @@ export class Cocktail {
   @Prop({ default: false })
   isPublished: boolean;
 
+  @Prop()
+  image: string;
+
   @Prop({ required: true })
   ingredients: [
     {

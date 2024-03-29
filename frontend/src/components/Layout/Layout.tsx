@@ -7,7 +7,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       <header>
         <Header />
       </header>
-      <main className="container mx-auto">{children}</main>
+      <main className="container mx-auto my-[30px]">{children}</main>
     </>
   );
 };
