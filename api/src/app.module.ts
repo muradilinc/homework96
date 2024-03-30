@@ -13,6 +13,7 @@ import { TokenAuthGuard } from './auth/token-auth.guard';
 import { PermitAuthGuard } from './auth/permit-auth.guard';
 import { ConfigModule } from '@nestjs/config';
 import { GoogleController } from './google/google.controller';
+import { SeedsService } from './seeds/seeds.service';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { GoogleController } from './google/google.controller';
     LocalStrategy,
     TokenAuthGuard,
     PermitAuthGuard,
+    SeedsService,
   ],
 })
 export class AppModule {}
