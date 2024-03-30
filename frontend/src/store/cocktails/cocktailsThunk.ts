@@ -1,6 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
-import { CocktailCommonData, CocktailData, Rating } from '../../types';
+import {
+  CocktailCommonData,
+  CocktailData,
+  GlobalError,
+  Rating,
+} from '../../types';
 import { RootState } from '../../app/store';
 
 export const createCocktail = createAsyncThunk<
@@ -53,16 +58,18 @@ export const getMyCocktails = createAsyncThunk<
   return response.data;
 });
 
-export const getSingleCocktail = createAsyncThunk<CocktailData, string>(
-  'cocktail/getSingleCocktail',
-  async (id) => {
+export const getSingleCocktail = createAsyncThunk<
+  CocktailData,
+  string,
+  { rejectValue: GlobalError }
+>('cocktail/getSingleCocktail', async (id, { rejectWithValue }) => {
+  try {
     const response = await axiosApi.get<CocktailData>(`/cocktails/${id}`);
-    if (!response.data) {
-      throw new Error('Not found!');
-    }
     return response.data;
-  },
-);
+  } catch (error) {
+    return rejectWithValue({ message: 'not found!' });
+  }
+});
 
 export const updateStatusCocktail = createAsyncThunk<void, string>(
   'cocktail/updateStatusCocktail',

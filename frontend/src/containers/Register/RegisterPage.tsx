@@ -3,6 +3,7 @@ import { RegisterMutation } from '../../types';
 import { useAppDispatch } from '../../app/hooks';
 import { register } from '../../store/users/usersThunk';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const RegisterPage = () => {
   const [state, setState] = useState<RegisterMutation>({
@@ -58,6 +59,10 @@ const RegisterPage = () => {
 
   const registerHandle = async (event: FormEvent) => {
     event.preventDefault();
+    if (state.avatar === null) {
+      toast.error('Please choose image for avatar');
+      return false;
+    }
     await dispatch(register(state)).unwrap();
     setState({
       email: '',
@@ -107,7 +112,6 @@ const RegisterPage = () => {
             name="avatar"
             ref={imageSelect}
             onChange={changeImageFiled}
-            required
           />
           <div className="flex flex-col gap-y-3">
             <h4 className="capitalize text-[22px]">avatar</h4>

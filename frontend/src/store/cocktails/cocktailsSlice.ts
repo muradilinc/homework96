@@ -1,4 +1,4 @@
-import { CocktailData } from '../../types';
+import { CocktailData, GlobalError } from '../../types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   getCocktails,
@@ -12,6 +12,7 @@ interface CocktailsState {
   cocktails: CocktailData[];
   cocktailsLoading: boolean;
   cocktailLoading: boolean;
+  cocktailSingleError: GlobalError | null;
 }
 
 const initialState: CocktailsState = {
@@ -19,6 +20,7 @@ const initialState: CocktailsState = {
   cocktails: [],
   cocktailsLoading: false,
   cocktailLoading: false,
+  cocktailSingleError: null,
 };
 
 const cocktailsSlice = createSlice({
@@ -62,7 +64,8 @@ const cocktailsSlice = createSlice({
         state.cocktail = cocktail;
       },
     );
-    builder.addCase(getSingleCocktail.rejected, (state) => {
+    builder.addCase(getSingleCocktail.rejected, (state, { payload: error }) => {
+      state.cocktailSingleError = error || null;
       state.cocktailLoading = false;
     });
   },
@@ -75,3 +78,6 @@ export const selectCocktailsLoading = (state: RootState) =>
   state.cocktails.cocktailsLoading;
 export const selectCocktailLoading = (state: RootState) =>
   state.cocktails.cocktailLoading;
+
+export const selectErrorSingle = (state: RootState) =>
+  state.cocktails.cocktailSingleError;

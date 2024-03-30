@@ -61,7 +61,7 @@ const CocktailPage = () => {
     setGrade(0);
   };
 
-  if (!cocktail || loading) {
+  if (loading || !cocktail) {
     return <Spinner />;
   }
 

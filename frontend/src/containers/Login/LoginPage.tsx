@@ -60,6 +60,7 @@ const LoginPage = () => {
             name="password"
             value={state.password}
             onChange={changeFields}
+            required
           />
           <GoogleLogin
             onSuccess={(credentialResponse) => {
