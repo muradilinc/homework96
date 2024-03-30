@@ -19,7 +19,7 @@ export class SeedsService {
       password: 'admin',
       token: crypto.randomUUID(),
       role: 'admin',
-      avatar: 'fixtures/users/user.avif',
+      avatar: '/fixtures/users/user.avif',
       displayName: 'vito',
     });
 
@@ -29,16 +29,16 @@ export class SeedsService {
         password: 'joe',
         token: crypto.randomUUID(),
         role: 'user',
-        avatar: 'fixtures/users/user.avif',
-        displayName: 'vito',
+        avatar: '/fixtures/users/user.avif',
+        displayName: 'joe',
       },
       {
         email: 'muradil@muradil.com',
         password: 'muradil',
         token: crypto.randomUUID(),
         role: 'user',
-        avatar: 'fixtures/users/user.avif',
-        displayName: 'vito',
+        avatar: '/fixtures/users/user.avif',
+        displayName: 'godjo',
       },
     ]);
 
@@ -48,7 +48,7 @@ export class SeedsService {
         title: 'Margarita',
         recipe: 'Mix tequila, triple sec, and lime juice, then serve over ice.',
         isPublished: true,
-        image: 'fixtures/cocktails/cocktail.jpg',
+        image: '/fixtures/cocktails/cocktail.jpg',
         ingredients: [
           { name: 'Tequila', count: '2 oz' },
           { name: 'Triple sec', count: '1 oz' },
@@ -62,7 +62,22 @@ export class SeedsService {
         recipe:
           'Mix vodka, triple sec, cranberry juice, and lime juice, then strain into a martini glass.',
         isPublished: true,
-        image: 'fixtures/cocktails/cocktail.jpg',
+        image: '/fixtures/cocktails/cocktail.jpg',
+        ingredients: [
+          { name: 'Vodka', count: '1.5 oz' },
+          { name: 'Triple sec', count: '0.5 oz' },
+          { name: 'Cranberry juice', count: '1 oz' },
+          { name: 'Lime juice', count: '0.5 oz' },
+        ],
+        rating: [],
+      },
+      {
+        user: user1._id,
+        title: 'Cosmopolitan',
+        recipe:
+          'Mix vodka, triple sec, cranberry juice, and lime juice, then strain into a martini glass.',
+        isPublished: false,
+        image: '/fixtures/cocktails/cocktail.jpg',
         ingredients: [
           { name: 'Vodka', count: '1.5 oz' },
           { name: 'Triple sec', count: '0.5 oz' },
