@@ -78,6 +78,3 @@ export const selectCocktailsLoading = (state: RootState) =>
   state.cocktails.cocktailsLoading;
 export const selectCocktailLoading = (state: RootState) =>
   state.cocktails.cocktailLoading;
-
-export const selectErrorSingle = (state: RootState) =>
-  state.cocktails.cocktailSingleError;
