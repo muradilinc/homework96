@@ -46,6 +46,11 @@ export interface CocktailCommonData {
   ingredients: Ingredient[];
 }
 
+export interface Rating {
+  userId: string;
+  grade: number;
+}
+
 export interface CocktailData {
   _id: string;
   title: string;
@@ -54,6 +59,7 @@ export interface CocktailData {
   recipe: string;
   ingredients: Ingredient[];
   user: User;
+  rating: Rating[];
 }
 
 export interface GlobalError {

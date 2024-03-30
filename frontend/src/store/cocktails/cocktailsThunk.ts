@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
-import { CocktailCommonData, CocktailData } from '../../types';
+import { CocktailCommonData, CocktailData, Rating } from '../../types';
 import { RootState } from '../../app/store';
 
 export const createCocktail = createAsyncThunk<
@@ -68,6 +68,21 @@ export const updateStatusCocktail = createAsyncThunk<void, string>(
   'cocktail/updateStatusCocktail',
   async (id) => {
     return await axiosApi.patch(`/cocktails/${id}`);
+  },
+);
+
+interface UpdateGrade {
+  idCocktail: string;
+  rating: Rating;
+}
+
+export const updateGradeCocktail = createAsyncThunk<void, UpdateGrade>(
+  'cocktail/updateGrade',
+  async ({ idCocktail, rating }) => {
+    return await axiosApi.patch(
+      `cocktails/${idCocktail}/change-rating`,
+      rating,
+    );
   },
 );
 

@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   deleteCocktail,
   getSingleCocktail,
+  updateGradeCocktail,
   updateStatusCocktail,
 } from '../../store/cocktails/cocktailsThunk';
 import {
@@ -15,6 +16,7 @@ import { selectUser } from '../../store/users/usersSlice';
 import { Trash } from '@phosphor-icons/react';
 import Spinner from '../../components/Spinner/Spinner';
 import { toast } from 'react-toastify';
+import { sumRating } from '../../helpers/sumRating';
 
 const CocktailPage = () => {
   const { id } = useParams() as { id: string };
@@ -23,6 +25,7 @@ const CocktailPage = () => {
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
   const loading = useAppSelector(selectCocktailLoading);
+  const [grade, setGrade] = useState(0);
 
   useEffect(() => {
     dispatch(getSingleCocktail(id));
@@ -38,6 +41,24 @@ const CocktailPage = () => {
     await dispatch(deleteCocktail(id)).unwrap();
     toast.success('Cocktail deleted!');
     navigate(-1);
+  };
+
+  const sendGradeHandle = async (event: FormEvent) => {
+    event.preventDefault();
+    if (grade > 5 || grade < 0) {
+      toast.error('Please enter grade 0 to 5');
+      return false;
+    }
+    const author = {
+      idCocktail: id,
+      rating: {
+        userId: user ? user._id : '',
+        grade,
+      },
+    };
+    await dispatch(updateGradeCocktail(author)).unwrap();
+    await dispatch(getSingleCocktail(id));
+    setGrade(0);
   };
 
   if (!cocktail || loading) {
@@ -70,7 +91,9 @@ const CocktailPage = () => {
               </button>
             ) : null}
           </div>
-          <h4 className="text-[20] font-bold">Rating: 4.5 (2 votes)</h4>
+          <h4 className="text-[20] font-bold">
+            Rating: {sumRating(cocktail)} ({cocktail.rating.length} votes)
+          </h4>
           <div className="flex gap-x-3 items-center">
             <h5 className="text-[20] font-bold">
               Status: {cocktail.isPublished ? 'Published' : 'Unpublished'}
@@ -100,56 +123,22 @@ const CocktailPage = () => {
       </div>
       <div>
         <h4>Rate:</h4>
-        <div className="flex items-center space-x-1 rtl:space-x-reverse">
-          <svg
-            className="w-4 h-4 text-yellow-300"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 20"
+        <form className="flex gap-x-3" onSubmit={sendGradeHandle}>
+          <input
+            className="border border-b text-[20px] px-3"
+            type="number"
+            value={grade}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setGrade(parseInt(event.target.value))
+            }
+          />
+          <button
+            className="bg-green-400 text-white py-[5px] px-[10px]"
+            type="submit"
           >
-            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-          </svg>
-          <svg
-            className="w-4 h-4 text-yellow-300"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 20"
-          >
-            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-          </svg>
-          <svg
-            className="w-4 h-4 text-yellow-300"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 20"
-          >
-            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-          </svg>
-          <svg
-            className="w-4 h-4 text-yellow-300"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 20"
-          >
-            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-          </svg>
-          <svg
-            className="w-4 h-4 text-gray-200 dark:text-gray-600"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 20"
-          >
-            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-          </svg>
-        </div>
-        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">
-          5.0
-        </span>
+            send
+          </button>
+        </form>
       </div>
     </>
   );
