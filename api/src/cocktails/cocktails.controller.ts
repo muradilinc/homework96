@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -100,6 +101,30 @@ export class CocktailsController {
       },
       [{ $set: { isPublished: { $eq: [false, '$isPublished'] } } }],
     );
+  }
+
+  @UseGuards(TokenAuthGuard)
+  @Patch(':id/change-rating')
+  async changeRating(
+    @Param('id') id: string,
+    @Body() ratingData: { userId: string; grade: number },
+  ) {
+    const { userId, grade } = ratingData;
+    const cocktail = await this.cocktailModel.findById(id);
+
+    const index = cocktail.rating.findIndex((item) => item.user === userId);
+    if (index !== -1) {
+      cocktail.rating[index].grade = grade;
+      await cocktail.save();
+    } else {
+      return this.cocktailModel.findOneAndUpdate(
+        { _id: id },
+        { $push: { rating: { user: userId, grade } } },
+        { new: true },
+      );
+    }
+
+    return cocktail;
   }
 
   @UseGuards(TokenAuthGuard, PermitAuthGuard)

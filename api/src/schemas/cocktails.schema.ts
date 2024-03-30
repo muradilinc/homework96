@@ -26,6 +26,14 @@ export class Cocktail {
       count: string;
     },
   ];
+
+  @Prop()
+  rating: [
+    {
+      user: string;
+      grade: number;
+    },
+  ];
 }
 
 export const CocktailSchema = SchemaFactory.createForClass(Cocktail);
